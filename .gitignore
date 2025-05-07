@@ -1,0 +1,84 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+.venv
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Data files
+data/*.csv
+data/*.xlsx
+data/*.xls
+data/*.db
+data/*.sqlite
+data/*.sql
+data/raw/
+data/processed/
+data/interim/
+data/implementation_plan.md
+data/execution_plan.md
+
+# Model files
+models/*.pkl
+models/*.h5
+models/*.joblib
+models/*.model
+models/checkpoints/
+
+# Logs
+logs/
+*.log
+logs.txt
+
+# Documentation
+docs/_build/
+site/
+notebook_handling.md
+data/features_list.md
+
+# Project specific
+*.bak
+*.tmp
+*.temp
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+attrition_analysis.py
+
+# Keep these files
+!data/README.md
+!requirements.txt
+!README.md

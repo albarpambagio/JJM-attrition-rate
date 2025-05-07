@@ -1,0 +1,46 @@
+[project]
+name = "jjm-attrition-rate"
+version = "0.1.0"
+description = "Employee Attrition Analysis using ML and Interactive Visualizations"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas>=1.3.0,<2.0.0",
+    "numpy>=1.24.0",
+    "altair>=5.0.0",
+    "pycaret>=3.3.0",
+    "kaleido==0.2.1",
+    "jupyter>=1.0.0",
+    "jupytext>=1.15.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.jupytext]
+formats = "ipynb,py:percent"
+notebook_metadata_filter = "jupytext,-all"
+cell_metadata_filter = "all"
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
