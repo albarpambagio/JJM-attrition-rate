@@ -82,3 +82,9 @@ attrition_analysis.py
 !data/README.md
 !requirements.txt
 !README.md
+!data_preparation_and_eda.md
+!attrition_analysis.py
+
+# New file
+todo.md
+docs/experiment_result.txt
