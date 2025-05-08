@@ -48,13 +48,33 @@
 - The inference set is used to simulate new employee data for deployment or API testing.
 - Predictions are made using the final model and the held-out inference set, ensuring a realistic evaluation of deployment performance.
 
-## 6. Key Findings
+## 6. Latest Tuned LDA Results (After Improved Data Prep)
+- **Cross-validation metrics (mean across folds):**
+
+| Metric    | Value  | Std   |
+|-----------|--------|-------|
+| Accuracy  | 0.718  | 0.039 |
+| AUC       | 0.719  | 0.122 |
+| Recall    | 0.630  | 0.179 |
+| Precision | 0.323  | 0.063 |
+| F1        | 0.425  | 0.093 |
+| Kappa     | 0.262  | 0.115 |
+| MCC       | 0.291  | 0.135 |
+
+- **Interpretation:**
+  - The model now catches 63% of true attrition cases (recall), with moderate precision (32%).
+  - AUC remains strong, indicating good separability.
+  - Fold variance is present but overall performance is stable.
+  - The new workflow is more realistic and less prone to overfitting, providing a robust estimate of generalization.
+
+## 7. Key Findings
 - **Linear models (LDA, Ridge, LR) optimized for recall are best for catching attrition cases.**
 - **Ensembling and stacking did not improve recall or F1 in this scenario.**
 - **Blending with tree models increased accuracy but drastically reduced recall.**
 - **If recall is the business priority, stick with tuned LDA or similar linear models.**
+- **The improved workflow with a held-out inference set provides a more realistic and production-ready evaluation.**
 
-## 7. Recommendations & Next Steps
+## 8. Recommendations & Next Steps
 - Consider adjusting the probability threshold to further optimize recall/precision trade-off.
 - Explore additional feature engineering or alternative imbalance techniques if higher recall is needed.
 - Use confusion matrix and business cost analysis to select the final model.

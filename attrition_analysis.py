@@ -22,7 +22,6 @@ import pandas as pd
 import numpy as np
 import altair as alt
 from pycaret.classification import *
-import os
 from sklearn.model_selection import train_test_split
 from IPython.display import display, Markdown
 
@@ -430,7 +429,7 @@ clf = setup(data=df_fe,
 
 
 # %%
-best_model = compare_models()
+# best_model = compare_models()
 
 # %% [markdown]
 # ### 6.2 Tune the Best Linear Model for Recall
@@ -444,24 +443,24 @@ evaluate_model(tuned_linear)
 # ### 6.3 Ensemble the Tuned Linear Model
 
 # %%
-ensemble_lr = ensemble_model(tuned_linear, method='Bagging')
-evaluate_model(ensemble_lr)
+# ensemble_lr = ensemble_model(tuned_linear, method='Bagging')
+# evaluate_model(ensemble_lr)
 
 # %% [markdown]
 # ### 6.4 Blend with Other Strong Models
 
 # %%
-tuned_rf = tune_model(create_model('rf'), optimize='Recall', n_iter=50)
-tuned_gbc = tune_model(create_model('gbc'), optimize='Recall', n_iter=50)
-blended = blend_models([tuned_linear, tuned_rf, tuned_gbc], optimize='Recall')
-evaluate_model(blended)
+# tuned_rf = tune_model(create_model('rf'), optimize='Recall', n_iter=50)
+# tuned_gbc = tune_model(create_model('gbc'), optimize='Recall', n_iter=50)
+# blended = blend_models([tuned_linear, tuned_rf, tuned_gbc], optimize='Recall')
+# evaluate_model(blended)
 
 # %% [markdown]
 # ### 6.5 Stack Models
 
 # %%
-stacked = stack_models([tuned_linear, tuned_rf, tuned_gbc], optimize='Recall')
-evaluate_model(stacked) 
+# stacked = stack_models([tuned_linear, tuned_rf, tuned_gbc], optimize='Recall')
+# evaluate_model(stacked) 
 
 # %% [markdown]
 # ### 6.6 Feature Importance Analysis (LDA Chosen for Interpretability)
@@ -496,7 +495,27 @@ def predict_attrition(input_data):
     predictions = predict_model(model, data=input_data)
     return predictions
 
-# Example usage with the held-out inference set:
-# preds_infer = predict_attrition(df_infer_input)
-# display(preds_infer.head())
+# Save EmployeeId for tracking
+employee_ids = df_infer_input['EmployeeId'].reset_index(drop=True)
 
+# Drop EmployeeId before feature engineering and prediction
+infer_features = df_infer_input.drop(columns=['EmployeeId'])
+
+# Apply feature engineering to inference data
+df_infer_fe = engineer_features(infer_features)
+
+# Preprocess categorical columns to ensure consistent naming (as in training)
+categorical_cols = ['BusinessTravel', 'Department', 'EducationField', 
+                   'Gender', 'JobRole', 'MaritalStatus', 'Over18', 'OverTime', 'AgeGroup']
+for col in categorical_cols:
+    df_infer_fe[col] = df_infer_fe[col].astype(str).str.replace(' ', '_').str.replace('&', '_and_')
+
+# Predict
+preds_infer = predict_attrition(df_infer_fe)
+
+# Add EmployeeId back to the predictions for tracking
+preds_infer = pd.concat([employee_ids, preds_infer.reset_index(drop=True)], axis=1)
+display(preds_infer.head())
+
+
+# %%
