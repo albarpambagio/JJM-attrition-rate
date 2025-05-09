@@ -35,7 +35,6 @@ def setup_modeling(df, target='Attrition', session_id=123):
         normalize=True,
         feature_selection=True,
         feature_selection_estimator='lightgbm',
-        feature_selection_param={'verbosity': -1, 'verbose': -1},
         session_id=session_id,
         train_size=0.7,
         fix_imbalance=True,
@@ -57,10 +56,10 @@ def evaluate_trained_model(model):
     evaluate_model(model)
 
 def plot_feature_importance(model):
-    """Plot feature importance and return the plot and importance DataFrame."""
-    plot = plot_model(model, plot='feature')
+    """Plot feature importance and return the importance DataFrame."""
+    plot_model(model, plot='feature')
     importance_df = pull()
-    return plot, importance_df
+    return importance_df
 
 def save_trained_model(model, path):
     """Save a trained model to disk."""

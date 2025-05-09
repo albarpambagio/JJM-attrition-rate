@@ -7,7 +7,7 @@
 
 ---
 ## High Priority
-- [ ] Summarize key findings and actionable recommendations for stakeholders
+- [x] Summarize key findings and actionable recommendations for stakeholders (before conversion)
 - [x] Add markdown explanations and interpretations to all notebooks
 - [x] Add confusion matrix and classification report to model evaluation
 - [x] Plot ROC and Precision-Recall curves for best models
@@ -27,7 +27,7 @@
 - [ ] Use SHAP or LIME for local interpretability
 
 ## Optional/Long-term
-- [ ] Automate the workflow (e.g., with a pipeline or script)
+- [x] Automate the workflow (e.g., with a pipeline or script)
 - [ ] Integrate with BI tools (Power BI, Tableau) for dashboarding
 - [ ] Set up experiment tracking (e.g., MLflow, Weights & Biases)
 - [ ] Ensure all code is well-documented and commented

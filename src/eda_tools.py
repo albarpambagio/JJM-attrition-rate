@@ -61,7 +61,6 @@ def perform_eda(df):
     for category in categories:
         chart = plot_attrition_by_category(df, category)
         charts[f'attrition_by_{category.lower()}'] = chart
-    charts['correlation_matrix'] = create_correlation_heatmap(df)
     charts['satisfaction_distribution'] = plot_satisfaction_distribution(df)
     return charts
 

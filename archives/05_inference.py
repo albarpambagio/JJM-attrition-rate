@@ -1,15 +1,11 @@
 # %%
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
-# %%
 """
 05 Inference
 Use the trained model to predict attrition on new/unseen data.
 """
 # %%
-from inference import predict_attrition
-from feature_engineering import engineer_features
+from src.inference import predict_attrition
+from src.feature_engineering import engineer_features
 import pandas as pd
 from IPython.display import display, Markdown
 # %%

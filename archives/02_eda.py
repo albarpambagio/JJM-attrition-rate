@@ -1,14 +1,10 @@
 # %%
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
-# %%
 """
 02 Exploratory Data Analysis (EDA)
 Visualize and summarize the cleaned employee attrition data.
 """
 # %%
-from eda_tools import plot_attrition_by_category, create_correlation_heatmap, plot_satisfaction_distribution, perform_eda, \
+from src.eda_tools import plot_attrition_by_category, create_correlation_heatmap, plot_satisfaction_distribution, perform_eda, \
     get_numeric_summary, get_categorical_summary, get_value_counts, get_missing_values, t_test_by_attrition, chi_square_test, correlation_test, \
     plot_histograms, plot_boxplots_by_attrition, plot_barplots_for_categorical, plot_stacked_bar_chart, plot_pairplot, plot_violin_by_attrition, plot_categorical_heatmap
 import pandas as pd
@@ -25,8 +21,8 @@ display(Markdown("""
 Let's load and preview the cleaned dataset to understand its structure and contents.
 """))
 # %%
-# Load cleaned data
-clean_df = pd.read_csv('data/employee_data_cleaned.csv')
+# Load feature-engineered data for EDA
+clean_df = pd.read_csv('data/employee_data_features.csv')
 clean_df.head()
 # %%
 display(Markdown("""
@@ -36,6 +32,7 @@ This chart shows the distribution of attrition across different departments, hel
 # Plot attrition by Department
 chart_dept = plot_attrition_by_category(clean_df, 'Department')
 chart_dept.display()
+chart_dept.save('eda_outputs/attrition_by_department.png')
 # %%
 display(Markdown("""
 ## Correlation Heatmap
@@ -44,6 +41,7 @@ The correlation heatmap visualizes relationships between numeric features, highl
 # Plot correlation heatmap
 chart_corr = create_correlation_heatmap(clean_df)
 chart_corr.display()
+chart_corr.save('eda_outputs/correlation_heatmap.png')
 # %%
 display(Markdown("""
 ## Satisfaction Distribution by Attrition
@@ -52,6 +50,7 @@ This boxplot compares overall satisfaction scores between employees who left and
 # Plot satisfaction distribution
 chart_sat = plot_satisfaction_distribution(clean_df)
 chart_sat.display()
+chart_sat.save('eda_outputs/satisfaction_distribution.png')
 # %%
 display(Markdown("""
 ## All EDA Charts
@@ -62,6 +61,7 @@ charts = perform_eda(clean_df)
 for name, chart in charts.items():
     print(name)
     chart.display()
+    chart.save(f'eda_outputs/{name}.png')
 # %%
 display(Markdown("""
 ## Descriptive Statistics
@@ -170,6 +170,7 @@ hist_charts = plot_histograms(clean_df, numeric_cols=['Age', 'MonthlyIncome', 'Y
 for name, chart in hist_charts.items():
     print(f'Histogram: {name}')
     chart.display()
+    chart.save(f'eda_outputs/histogram_{name}.png')
 # %%
 display(Markdown("""
 ### Boxplots by Attrition
@@ -180,6 +181,7 @@ box_charts = plot_boxplots_by_attrition(clean_df, numeric_cols=['Age', 'MonthlyI
 for name, chart in box_charts.items():
     print(f'Boxplot: {name}')
     chart.display()
+    chart.save(f'eda_outputs/boxplot_{name}_by_attrition.png')
 # %%
 display(Markdown("""
 ### Bar Plots for Categorical Features
@@ -190,6 +192,7 @@ bar_charts = plot_barplots_for_categorical(clean_df, categorical_cols=['Departme
 for name, chart in bar_charts.items():
     print(f'Barplot: {name}')
     chart.display()
+    chart.save(f'eda_outputs/barplot_{name}_by_attrition.png')
 # %%
 display(Markdown("""
 ### Stacked Bar Chart: Department by Attrition
@@ -199,6 +202,7 @@ Visualizes the proportion of attrition within each department.
 if 'Department' in clean_df.columns:
     stacked_chart = plot_stacked_bar_chart(clean_df, 'Department')
     stacked_chart.display()
+    stacked_chart.save('eda_outputs/stacked_bar_department_by_attrition.png')
 # %%
 display(Markdown("""
 ### Pairplot (Scatterplot Matrix)
@@ -206,8 +210,9 @@ Visualizes pairwise relationships between numeric features, colored by attrition
 """))
 # Pairplot (scatterplot matrix) for numeric features
 pair_charts = plot_pairplot(clean_df, numeric_cols=['Age', 'MonthlyIncome', 'YearsAtCompany'] if all(col in clean_df.columns for col in ['Age', 'MonthlyIncome', 'YearsAtCompany']) else None)
-for chart in pair_charts:
+for i, chart in enumerate(pair_charts):
     chart.display()
+    chart.save(f'eda_outputs/pairplot_{i}.png')
 # %%
 display(Markdown("""
 ### Violin Plot: MonthlyIncome by Attrition
@@ -217,6 +222,7 @@ Shows the distribution and density of monthly income for each attrition group.
 if 'MonthlyIncome' in clean_df.columns:
     violin_chart = plot_violin_by_attrition(clean_df, 'MonthlyIncome')
     violin_chart.display()
+    violin_chart.save('eda_outputs/violin_monthlyincome_by_attrition.png')
 # %%
 display(Markdown("""
 ### Heatmap: Department vs. JobRole
@@ -225,4 +231,59 @@ Shows the frequency of employees in each Department-JobRole combination.
 # Heatmap for Department vs. JobRole
 if 'Department' in clean_df.columns and 'JobRole' in clean_df.columns:
     heatmap_chart = plot_categorical_heatmap(clean_df, 'Department', 'JobRole')
-    heatmap_chart.display() 
+    heatmap_chart.display()
+    heatmap_chart.save('eda_outputs/heatmap_department_jobrole.png')
+# %%
+display(Markdown("""
+# Findings, Insights, and Recommendations
+
+## Findings & Insights
+
+### 1. Demographics & Categorical Distributions
+- **Department:** Most employees are in Research & Development (66%), followed by Sales (30%), with Human Resources being a small minority (4%).
+- **Job Roles:** The largest groups are Sales Executive, Research Scientist, and Laboratory Technician.
+- **Marital Status:** The majority are Married (44%), with Single (33%) and Divorced (23%) also represented.
+- **Gender:** There are more males (59%) than females (41%).
+- **Age Groups:** The largest age group is 26-35 (41%), followed by 36-45 (31%).
+
+### 2. Numeric Summary
+- **Age:** Mean: 37 years (range: 18–60).
+- **Monthly Income:** Mean: $6,626 (range: $1,009–$19,999).
+- **Years at Company:** Mean: 7.1 years (range: 0–40).
+
+### 3. Attrition Patterns
+- **Attrition Rate:** About 17% of employees have left (mean of Attrition column).
+- **OverTime:** 29% of employees work overtime, which may be a risk factor for attrition.
+
+### 4. Statistical Tests
+- **T-test (MonthlyIncome by Attrition):** Result: `nan` (likely due to missing or constant data in one group; check data integrity).
+- **Chi-square (Department vs. Attrition):** p-value ≈ 0.099 (not statistically significant at 0.05), suggesting department is not a strong predictor of attrition.
+- **Correlation (Age and MonthlyIncome):** Correlation: 0.50 (p < 0.001), indicating a moderate positive relationship—older employees tend to earn more.
+
+### 5. Feature Importance & Model Performance
+- **Model Used:** Linear Discriminant Analysis (LDA)
+- **Performance:** Accuracy: 71%, AUC: 0.78, Recall: 0.75 (good for catching attrition cases), Precision: 0.34 (many false positives)
+- **Key Features:** (See feature importance plot and CSV for details.)
+
+### 6. Visual Insights (from eda_outputs/)
+- Attrition is higher in certain job roles and age groups (see `attrition_by_jobrole.png`, `attrition_by_agegroup.png`).
+- OverTime and Marital Status show visible differences in attrition rates.
+- Correlation heatmap shows strong relationships between some numeric features (see `correlation_heatmap.png`).
+- Boxplots and violin plots reveal that employees who left often have lower satisfaction and different income distributions.
+
+## Recommendations
+
+1. **Focus Retention Efforts on At-Risk Groups:**
+   - Target job roles and age groups with higher attrition.
+   - Monitor employees working overtime and those with lower satisfaction scores.
+2. **Further Investigate Data Issues:**
+   - The t-test for MonthlyIncome by Attrition returned `nan`. Check for missing or constant values in the relevant groups.
+3. **Modeling Improvements:**
+   - While recall is high, precision is low. Consider collecting more data, engineering new features, trying alternative models, or adjusting the decision threshold.
+4. **Monitor and Support Employees:**
+   - Implement programs to improve job satisfaction, especially for at-risk roles.
+   - Review compensation and promotion policies for fairness and competitiveness.
+5. **Continue Data-Driven Monitoring:**
+   - Regularly update the analysis as new data comes in.
+   - Use the exported results and visualizations for ongoing reporting and management decisions.
+""")) 

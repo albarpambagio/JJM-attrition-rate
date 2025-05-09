@@ -1,0 +1,5 @@
+,BusinessTravel,Department,EducationField,Gender,JobRole,MaritalStatus,Over18,OverTime,AgeGroup
+count,1058,1058,1058,1058,1058,1058,1058,1058,1058
+unique,3,3,6,2,9,3,1,2,5
+top,Travel_Rarely,Research & Development,Life Sciences,Male,Sales Executive,Married,Y,No,26-35
+freq,746,701,436,620,232,464,1058,751,431

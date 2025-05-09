@@ -1,14 +1,10 @@
 # %%
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
-# %%
 """
 01 Data Cleaning
 Load and clean the employee attrition dataset.
 """
 # %%
-from data_processing import load_data, clean_data, split_data
+from src.data_processing import load_data, clean_data, split_data
 import pandas as pd
 from IPython.display import display, Markdown
 # %%

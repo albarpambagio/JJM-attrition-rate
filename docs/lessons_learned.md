@@ -40,6 +40,20 @@ This document summarizes the key best practices and lessons learned from the Emp
 - **Saving Artifacts:**
   - All important outputs (models, plots, predictions) are saved for reproducibility and evidence.
 
+## 4a. Pipeline Automation & Execution
+- **Automated Pipeline Script:**
+  - A robust `run_all.py` script orchestrates the execution of all notebooks/scripts in the correct order, ensuring dependencies are respected.
+  - The script checks for required outputs after each step and skips steps if outputs are up-to-date, supporting fast iterative development.
+- **Error Handling & Logging:**
+  - Each script is run in a subprocess with detailed error handling. Errors are logged to timestamped log files for easy debugging.
+  - The pipeline can be configured to stop on error or continue, and missing outputs are clearly reported.
+- **Checkpoint/Resume & Force Options:**
+  - The pipeline supports resuming from any step (`--from-step`) and forcing re-runs (`--force`), making it easy to debug or rerun only parts of the workflow.
+- **Output Validation:**
+  - After each step, the script validates that all expected outputs are present and up-to-date, warning if anything is missing or stale.
+- **Reproducibility & Collaboration:**
+  - This approach ensures that the entire workflow can be rerun end-to-end or in parts, supporting reproducibility, collaboration, and robust experimentation.
+
 ## 5. Documentation & Collaboration
 - **Comprehensive README:**
   - The README includes project summary, API usage, and links to detailed docs.

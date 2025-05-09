@@ -1,14 +1,10 @@
 # %%
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
-# %%
 """
 03 Feature Engineering
 Create new features for modeling employee attrition.
 """
 # %%
-from feature_engineering import engineer_features
+from src.feature_engineering import engineer_features
 import pandas as pd
 from IPython.display import display, Markdown
 # %%
