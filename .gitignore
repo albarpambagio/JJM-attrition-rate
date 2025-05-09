@@ -38,7 +38,6 @@ venv.bak/
 .DS_Store
 
 # Data files
-data/*.csv
 data/*.xlsx
 data/*.xls
 data/*.db
@@ -76,15 +75,16 @@ data/features_list.md
 htmlcov/
 .pytest_cache/
 .ruff_cache/
-attrition_analysis.py
+
+# Bytecode caches in src and notebook
+src/__pycache__/
+notebook/__pycache__/
 
 # Keep these files
 !data/README.md
 !requirements.txt
 !README.md
 !data_preparation_and_eda.md
-!attrition_analysis.py
 
 # New file
-todo.md
 docs/experiment_result.txt

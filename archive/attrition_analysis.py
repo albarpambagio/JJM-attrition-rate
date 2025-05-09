@@ -1,3 +1,5 @@
+# ARCHIVED: This script is not used in the current workflow. See src/ for modular code and notebook/ for the pipeline.
+# (Original content preserved for reference)
 #!/usr/bin/env python3
 # ---
 # jupyter:
@@ -19,11 +21,13 @@ This script implements the execution plan for analyzing employee attrition data 
 
 # Import required libraries
 import pandas as pd
-import numpy as np
 import altair as alt
 from pycaret.classification import *
 from sklearn.model_selection import train_test_split
 from IPython.display import display, Markdown
+import os
+import sys
+import contextlib
 
 # Set display options
 pd.set_option('display.max_columns', None)
@@ -33,6 +37,18 @@ pd.set_option('display.max_rows', 100)
 alt.data_transformers.enable('default')
 alt.theme.enable('default')
 
+@contextlib.contextmanager
+def suppress_stdout_stderr():
+    with open(os.devnull, 'w') as devnull:
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = devnull
+        sys.stderr = devnull
+        try:
+            yield
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
 
 # %% [markdown]
 # ## 2.1 Split Data for Modeling and Inference
@@ -140,20 +156,29 @@ df_clean.head(10)
 # ## 2.3 Data Validation and Exploration (on Modeling Set Only)
 
 # %%
-display(Markdown('### Data Validation: Modeling Set'))
+# Create output directory for EDA tables
+eda_dir = 'eda_outputs'
+os.makedirs(eda_dir, exist_ok=True)
 
-display(Markdown(f'**Shape:** {df_model.shape}'))
+# Descriptive statistics
+eda_desc_stats = df_model.describe(include='all')
+display(eda_desc_stats)
+eda_desc_stats.to_csv(os.path.join(eda_dir, 'eda_describe.csv'))
 
-display(Markdown('**Column Data Types:**'))
-display(df_model.dtypes.to_frame('Dtype').T)
+# Value counts for Department
+eda_dept_counts = df_model['Department'].value_counts().to_frame('count')
+display(eda_dept_counts)
+eda_dept_counts.to_csv(os.path.join(eda_dir, 'eda_department_counts.csv'))
 
-display(Markdown('**Missing Values per Column:**'))
-display(df_model.isna().sum().to_frame('Missing Values').T)
+# Missing values summary
+eda_missing_summary = df_model.isna().sum().to_frame('missing')
+display(eda_missing_summary)
+eda_missing_summary.to_csv(os.path.join(eda_dir, 'eda_missing_summary.csv'))
 
-display(Markdown(f'**Duplicate Rows:** {df_model.duplicated().sum()}'))
-
-display(Markdown('**Quick Summary Statistics:**'))
-display(df_model.describe(include='all'))
+# Correlation matrix
+eda_corr_matrix = df_model.corr()
+display(eda_corr_matrix)
+eda_corr_matrix.to_csv(os.path.join(eda_dir, 'eda_correlation_matrix.csv'))
 
 # %% [markdown]
 # ## Prepare Inference Data (for Deployment/Testing)
@@ -383,60 +408,61 @@ for col in categorical_cols:
     
 if 'EmployeeId' in df_fe.columns:
     df_fe = df_fe.drop(columns=['EmployeeId'])
-    
-clf = setup(data=df_fe, 
-            target='Attrition',
-            numeric_features=['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 
-                            'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked',
-                            'PercentSalaryHike', 'StandardHours', 'TotalWorkingYears',
-                            'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole',
-                            'YearsSinceLastPromotion', 'YearsWithCurrManager',
-                            'TenureRatio', 'OverallSatisfaction', 'SalaryToAgeRatio',
-                            'SalaryToTenureRatio', 'PromotionRate', 'RoleStability',
-                            'TravelImpact'],
-            categorical_features=['BusinessTravel', 'Department', 'EducationField',
-                                'Gender', 'JobRole', 'MaritalStatus', 'Over18',
-                                'OverTime', 'AgeGroup'],
-            ordinal_features={
-                'Education': [1, 2, 3, 4, 5],
-                'EnvironmentSatisfaction': [1, 2, 3, 4],
-                'JobInvolvement': [1, 2, 3, 4],
-                'JobLevel': [1, 2, 3, 4, 5],
-                'JobSatisfaction': [1, 2, 3, 4],
-                'PerformanceRating': [1, 2, 3, 4],
-                'RelationshipSatisfaction': [1, 2, 3, 4],
-                'StockOptionLevel': [0, 1, 2, 3],
-                'WorkLifeBalance': [1, 2, 3, 4]
-            },
-            # Encoding parameters to ensure consistency
-            encoding_method='onehot',  # Explicitly set encoding method
-            max_encoding_ohe=10,       # Limit one-hot encoding categories
-            rare_to_value=0.05,        # Group rare categories
-            rare_value='_rare_',       # Name for rare category group
-            
-            # Other parameters
-            normalize=True,
-            feature_selection=True,
-            session_id=123,
-            train_size=0.7,
-            fix_imbalance=True,
-            fix_imbalance_method='smote',
-            
-            # Additional troubleshooting parameters
-            preprocess=True,           # Ensure preprocessing is enabled
-            verbose=True,             # Show more details
-            memory=False)             # Disable memory caching for debugging
 
+clf = setup(
+    data=df_fe, 
+    target='Attrition',
+    numeric_features=['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 
+                    'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked',
+                    'PercentSalaryHike', 'StandardHours', 'TotalWorkingYears',
+                    'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole',
+                    'YearsSinceLastPromotion', 'YearsWithCurrManager',
+                    'TenureRatio', 'OverallSatisfaction', 'SalaryToAgeRatio',
+                    'SalaryToTenureRatio', 'PromotionRate', 'RoleStability',
+                    'TravelImpact'],
+    categorical_features=['BusinessTravel', 'Department', 'EducationField',
+                        'Gender', 'JobRole', 'MaritalStatus', 'Over18',
+                        'OverTime', 'AgeGroup'],
+    ordinal_features={
+        'Education': [1, 2, 3, 4, 5],
+        'EnvironmentSatisfaction': [1, 2, 3, 4],
+        'JobInvolvement': [1, 2, 3, 4],
+        'JobLevel': [1, 2, 3, 4, 5],
+        'JobSatisfaction': [1, 2, 3, 4],
+        'PerformanceRating': [1, 2, 3, 4],
+        'RelationshipSatisfaction': [1, 2, 3, 4],
+        'StockOptionLevel': [0, 1, 2, 3],
+        'WorkLifeBalance': [1, 2, 3, 4]
+    },
+    # Encoding parameters to ensure consistency
+    encoding_method='onehot',  # Explicitly set encoding method
+    max_encoding_ohe=10,       # Limit one-hot encoding categories
+    rare_to_value=0.05,        # Group rare categories
+    rare_value='_rare_',       # Name for rare category group
+    # Other parameters
+    normalize=True,
+    feature_selection=True,
+    feature_selection_estimator='lightgbm',
+    feature_selection_param={'verbosity': -1, 'verbose': -1},
+    session_id=123,
+    train_size=0.7,
+    fix_imbalance=True,
+    fix_imbalance_method='smote',
+    # Additional troubleshooting parameters
+    preprocess=True,           # Ensure preprocessing is enabled
+    verbose=False,             # Suppress PyCaret output
+    memory=False)              # Disable memory caching for debugging
 
-# %%
-# best_model = compare_models()
+best_linear = create_model('lda', verbose=False)  # or 'ridge', 'lr'
+tuned_linear = tune_model(best_linear, optimize='Recall', n_iter=50, verbose=False)
+evaluate_model(tuned_linear)
 
 # %% [markdown]
 # ### 6.2 Tune the Best Linear Model for Recall
 
 # %%
-best_linear = create_model('lda')  # or 'ridge', 'lr'
-tuned_linear = tune_model(best_linear, optimize='Recall', n_iter=50)
+best_linear = create_model('lda', verbose=False)  # or 'ridge', 'lr'
+tuned_linear = tune_model(best_linear, optimize='Recall', n_iter=50, verbose=False)
 evaluate_model(tuned_linear)
 
 # %% [markdown]
@@ -470,7 +496,15 @@ evaluate_model(tuned_linear)
 # Use the tuned LDA model for feature importance, regardless of previous best/ensemble/blend/stack results
 tuned_lda = tuned_linear  # tuned_linear is the tuned LDA model from earlier
 feature_importance_plot = plot_model(tuned_lda, plot='feature')
+# Display the feature importance plot
 display(feature_importance_plot)
+
+# Retrieve and display the feature importance table
+feature_importance_df = pull()
+display(feature_importance_df)
+# Save feature importance as CSV for reporting
+to_save_path = 'models/feature_importance.csv'
+feature_importance_df.to_csv(to_save_path, index=False)
 
 # %% [markdown]
 # ## 7. Deployment Preparation
