@@ -20,6 +20,10 @@ dependencies = [
     "vl-convert-python>=1.7.0",
     "nbconvert>=7.16.6",
     "shap>=0.47.2",
+    "scipy>=1.11.0",
+    "matplotlib>=3.7.0",
+    "ipython>=8.0.0",
+    "colorama>=0.4.6",
 ]
 
 [build-system]
@@ -40,11 +44,11 @@ target-version = "py39"
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
 ]
 
 [tool.ruff.format]
@@ -54,6 +58,28 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+
 export = [
     "vl-convert-python"
+]
+
+api = [
+    "fastapi>=0.115.12",
+    "uvicorn>=0.34.2",
+    "pydantic>=2.11.4",
+]
+
+notebook = [
+    "jupyter>=1.0.0",
+    "jupytext>=1.15.0",
+    "ipython>=8.0.0",
+    "nbconvert>=7.16.6",
 ]

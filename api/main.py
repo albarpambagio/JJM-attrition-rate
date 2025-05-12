@@ -1,8 +1,15 @@
 import os
 import warnings
+from pathlib import Path
+
+# Ensure we're in the project root directory
+project_root = Path(__file__).resolve().parent.parent
+if os.getcwd() != str(project_root):
+    os.chdir(str(project_root))
+    print(f"Changed working directory to: {project_root}")
+
 os.environ["PYCARET_CUSTOM_LOGGING_LEVEL"] = "CRITICAL"
 warnings.filterwarnings("ignore")
-
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel

@@ -8,13 +8,15 @@ JJM-attrition-rate/
 ├── archives/                    # (Older scripts, legacy, or archived analysis)
 ├── data/                        # Raw and processed data files
 ├── docs/                        # Documentation (markdown, pdf, etc.)
+│   ├── data_preparation_and_eda.md
+│   ├── attrition_experimentation.md
+│   ├── metabase_setup.md
+│   ├── lessons_learned.md
+│   ├── experiment_result.txt
 │   └── dashboard.pdf
 ├── docker/                      # Docker and deployment files
-│   └── metabase-deployment.yaml
 ├── eda_outputs/                 # EDA result files (plots, tables, etc.)
-│   └── Figure_1.png
 ├── logs/                        # Log files
-│   └── logs.log
 ├── models/                      # Saved models and model artifacts
 ├── notebooks/                   # All notebook-style scripts (for Jupytext or .ipynb)
 │   ├── 01_data_cleaning.py
@@ -23,7 +25,6 @@ JJM-attrition-rate/
 │   ├── 04_modeling.py
 │   └── 05_inference.py
 ├── results/                     # Output files (csv, db, etc.)
-│   └── metabase.db.mv.db
 ├── src/                         # All Python modules (reusable code)
 │   ├── data_processing.py
 │   ├── feature_engineering.py
@@ -34,6 +35,7 @@ JJM-attrition-rate/
 ├── run_all.py                   # Orchestration script
 ├── README.md
 ├── pyproject.toml
+├── requirements.txt
 ├── .gitignore
 ├── todo.md
 └── .python-version
@@ -92,6 +94,18 @@ from feature_engineering import engineer_features
 - The workflow with a held-out inference set provides a realistic, production-ready evaluation.
 - [Full details in docs/attrition_experimentation.md](docs/attrition_experimentation.md)
 
+### Feature Importance Analysis
+- **SHAP (SHapley Additive exPlanations)** values are used to understand feature importance and model predictions:
+  - Global feature importance shows which factors most influence attrition predictions
+  - Feature importance scores are saved in `results/shap_feature_importance.csv`
+  - Top features are used to create the Metabase dashboard for monitoring
+- Key findings from SHAP analysis:
+  - Work-life balance and job satisfaction are strong predictors of attrition
+  - Age and tenure ratios provide important context for attrition risk
+  - Department and job role interactions reveal patterns in employee retention
+- The analysis helps identify actionable insights for HR interventions
+- [Full details in docs/attrition_experimentation.md](docs/attrition_experimentation.md)
+
 ### Future Works
 - For a robust, production-ready deployment, the following are recommended:
   - Input validation (check for missing columns, correct dtypes, etc.)
@@ -99,7 +113,7 @@ from feature_engineering import engineer_features
   - Logging and monitoring
   - Security (authentication, rate limiting, etc.)
   - API endpoint documentation
-- [See docs/future_works.md for more](docs/future_works.md)
+- [See docs/lessons_learned.md for more](docs/lessons_learned.md)
 
 ---
 
@@ -198,4 +212,4 @@ A list of employee records (all fields except `Attrition`; `EmployeeId` is optio
 
 3. **Prepare Data for Dashboarding**: The `src/metabase_prep.py` script selects the top SHAP features and creates a SQLite database (`results/feature_monitor.db`) containing only these features and the target variable.
 
-4. **Metabase Dashboard**: Connect Metabase to the SQLite database and use the `shap_selected_features` table as the basis for your dashboard visualizations. This ensures the dashboard focuses on the most impactful factors for attrition.
+4. **Metabase Dashboard**: Connect Metabase to the SQLite database and use the `shap_selected_features` table as the basis for your dashboard visualizations. This ensures the dashboard focuses on the most impactful factors for attrition. See [Metabase Setup Guide](docs/metabase_setup.md) for detailed instructions.
