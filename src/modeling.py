@@ -3,6 +3,10 @@ import pandas as pd
 
 def setup_modeling(df, target='Attrition', session_id=123):
     """Setup PyCaret classification environment."""
+    # Drop EmployeeId if it exists
+    if 'EmployeeId' in df.columns:
+        df = df.drop('EmployeeId', axis=1)
+        
     clf = setup(
         data=df,
         target=target,
@@ -71,4 +75,4 @@ def load_trained_model(path):
 
 def predict_with_model(model, input_data):
     """Make predictions with a trained model."""
-    return predict_model(model, data=input_data) 
+    return predict_model(model, data=input_data)

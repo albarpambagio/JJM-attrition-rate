@@ -16,11 +16,11 @@ except ImportError:
     Fore = Style = Dummy()
 
 NOTEBOOKS = [
-    ("notebook/01_data_cleaning.py", ["data/employee_data_cleaned.csv"]),
-    ("notebook/03_feature_engineering.py", ["data/employee_data_features.csv"]),
-    ("notebook/02_eda.py", ["results/numeric_summary.csv", "results/categorical_summary.csv"]),
-    ("notebook/04_modeling.py", ["models/final_lda_model", "results/confusion_matrix.md"]),
-    ("notebook/05_inference.py", ["results/predictions.csv"]), # adjust as needed
+    ("archives/01_data_cleaning.py", ["data/employee_data_cleaned.csv"]),
+    ("archives/03_feature_engineering.py", ["data/employee_data_features.csv"]),
+    ("archives/02_eda.py", ["results/numeric_summary.csv", "results/categorical_summary.csv"]),
+    ("archives/04_modeling.py", ["models/final_lda_model", "results/confusion_matrix.md"]),
+    ("archives/05_inference.py", ["results/predictions.csv"]), # adjust as needed
 ]
 
 LOG_DIR = "logs"

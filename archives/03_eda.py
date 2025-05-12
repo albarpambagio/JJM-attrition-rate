@@ -260,12 +260,7 @@ display(Markdown("""
 - **Chi-square (Department vs. Attrition):** p-value ≈ 0.099 (not statistically significant at 0.05), suggesting department is not a strong predictor of attrition.
 - **Correlation (Age and MonthlyIncome):** Correlation: 0.50 (p < 0.001), indicating a moderate positive relationship—older employees tend to earn more.
 
-### 5. Feature Importance & Model Performance
-- **Model Used:** Linear Discriminant Analysis (LDA)
-- **Performance:** Accuracy: 71%, AUC: 0.78, Recall: 0.75 (good for catching attrition cases), Precision: 0.34 (many false positives)
-- **Key Features:** (See feature importance plot and CSV for details.)
-
-### 6. Visual Insights (from eda_outputs/)
+### 5. Visual Insights (from eda_outputs/)
 - Attrition is higher in certain job roles and age groups (see `attrition_by_jobrole.png`, `attrition_by_agegroup.png`).
 - OverTime and Marital Status show visible differences in attrition rates.
 - Correlation heatmap shows strong relationships between some numeric features (see `correlation_heatmap.png`).
@@ -278,12 +273,10 @@ display(Markdown("""
    - Monitor employees working overtime and those with lower satisfaction scores.
 2. **Further Investigate Data Issues:**
    - The t-test for MonthlyIncome by Attrition returned `nan`. Check for missing or constant values in the relevant groups.
-3. **Modeling Improvements:**
-   - While recall is high, precision is low. Consider collecting more data, engineering new features, trying alternative models, or adjusting the decision threshold.
-4. **Monitor and Support Employees:**
+3. **Monitor and Support Employees:**
    - Implement programs to improve job satisfaction, especially for at-risk roles.
    - Review compensation and promotion policies for fairness and competitiveness.
-5. **Continue Data-Driven Monitoring:**
+4. **Continue Data-Driven Monitoring:**
    - Regularly update the analysis as new data comes in.
    - Use the exported results and visualizations for ongoing reporting and management decisions.
 """)) 

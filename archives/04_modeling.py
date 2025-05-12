@@ -10,8 +10,10 @@ from IPython.display import display, Markdown
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve, precision_recall_curve
 import numpy as np
 import os
-from pycaret.classification import predict_model, plot_model
+from pycaret.classification import predict_model, plot_model, pull
 import shutil
+import shap
+import matplotlib.pyplot as plt
 # %%
 display(Markdown("""
 # Modeling
@@ -109,14 +111,29 @@ display(Markdown("""
 We analyze which features are most influential in predicting attrition.
 """))
 # %%
-# Feature importance
-plot_model(model, plot='feature', save=True)
-shutil.move('Feature Importance.png', 'results/feature_importance_plot.png')
-importance_df = plot_feature_importance(model)
-display(importance_df.head())
-# Export feature importance to CSV
-if importance_df is not None:
-    importance_df.to_csv('results/feature_importance.csv', index=False)
+# --- SHAP summary plot and CSV export ---
+from pycaret.classification import get_config
+
+# Get the transformed training data used by PyCaret
+X_train_transformed = get_config('X_train_transformed')
+
+# Create a SHAP explainer for your model
+explainer = shap.Explainer(model, X_train_transformed)
+shap_values = explainer(X_train_transformed)
+
+# Generate and save SHAP summary plot
+shap.summary_plot(shap_values.values, X_train_transformed, show=False)
+plt.tight_layout()
+plt.savefig('results/shap_summary_plot.png', bbox_inches='tight')
+plt.close()
+
+# SHAP feature importance (mean absolute SHAP value per feature)
+shap_importance = pd.DataFrame({
+    'Feature': X_train_transformed.columns,
+    'MeanAbsSHAP': np.abs(shap_values.values).mean(axis=0)
+}).sort_values(by='MeanAbsSHAP', ascending=False)
+shap_importance.to_csv('results/shap_feature_importance.csv', index=False)
+
 # %%
 display(Markdown("""
 ## Save Model
@@ -125,3 +142,54 @@ The final trained model is saved for future inference and deployment.
 # %%
 # Save model
 save_trained_model(model, 'models/final_lda_model') 
+
+# %%
+display(Markdown("""
+## Model Performance Insights
+
+### Feature Importance & Model Performance
+- **Model Used:** Linear Discriminant Analysis (LDA)
+- **Performance:** Accuracy: 70%, AUC: 0.78, Recall: 0.75 (good for catching attrition cases), Precision: 0.34 (many false positives)
+- **Key Features (by SHAP importance):**
+    1. **OverTime** — Most influential; employees who work overtime are much more likely to leave.
+    2. **EnvironmentSatisfaction** — Lower satisfaction increases attrition risk.
+    3. **Age** — Younger employees tend to have higher attrition risk.
+    4. **MonthlyIncome** — Lower income is associated with higher attrition.
+    5. **DailyRate, DistanceFromHome, RoleStability, MonthlyRate** — These also contribute, but to a lesser extent.
+
+#### SHAP Feature Importance Analysis
+The table below (from `shap_feature_importance.csv`) shows the mean absolute SHAP value for each feature, which quantifies the average impact of each feature on the model's prediction for employee attrition. A higher value means the feature has a greater influence on the model's output.
+
+| Rank | Feature                 | MeanAbsSHAP |
+|------|-------------------------|-------------|
+| 1    | OverTime                | 0.75        |
+| 2    | EnvironmentSatisfaction | 0.56        |
+| 3    | Age                     | 0.37        |
+| 4    | MonthlyIncome           | 0.26        |
+| 5    | DailyRate               | 0.20        |
+| 6    | DistanceFromHome        | 0.19        |
+| 7    | RoleStability           | 0.16        |
+| 8    | MonthlyRate             | 0.15        |
+
+**Interpretation:**
+- **OverTime** is by far the most important feature, with a mean absolute SHAP value of 0.75. This means that whether or not an employee works overtime has the largest average effect on the model's prediction of attrition.
+- **EnvironmentSatisfaction** is the second most important, indicating that employees' satisfaction with their work environment is a key driver of attrition risk.
+- **Age** is also significant, suggesting that attrition risk varies notably with employee age (often, younger employees are more likely to leave).
+- **MonthlyIncome** and **DailyRate** both have moderate influence, showing that compensation factors play a role, but are less critical than overtime or satisfaction.
+- **DistanceFromHome**, **RoleStability**, and **MonthlyRate** have smaller but still meaningful impacts.
+
+**Actionable Insights:**
+- **Monitor and manage overtime:** Since overtime is the top driver, reducing excessive overtime or compensating for it may help reduce attrition.
+- **Improve environment satisfaction:** Initiatives to boost workplace satisfaction could have a strong effect on retention.
+- **Targeted retention for younger employees:** Since age is a key factor, consider tailored retention programs for younger staff.
+- **Review compensation and stability:** While not the top factors, fair pay and stable roles still contribute to retention and should not be neglected.
+
+## Modeling Recommendations
+2. **Modeling Improvements:**
+   - While recall is high, precision is low. Consider:
+     - Collecting more data to balance class distribution
+     - Engineering interaction features between key variables
+     - Experimenting with alternative models (XGBoost, Random Forest)
+     - Adjusting classification decision thresholds
+     - Implementing feature selection to reduce noise
+"""))
