@@ -1,5 +1,36 @@
 # Employee Attrition Prediction API
 
+## 🎯 Business Problem
+
+**Jaya Jaya Maju** is a multinational company with over 1,000 employees across Indonesia. Despite its growth, the company faces a major challenge in managing and retaining its workforce. Currently, the employee attrition rate has exceeded 10% and may continue to rise if not addressed promptly.
+
+To tackle this issue, the HR team aims to understand the key drivers behind employee attrition and leverage technology to monitor workforce trends on an ongoing basis. The business needs a data-driven solution to identify the main factors contributing to attrition, predict high-risk employees, and present insights through an intuitive dashboard, enabling faster and more targeted HR interventions.
+
+## 📋 Project Scope
+
+### Data Preparation & Analysis
+- Data cleaning and validation
+- Feature engineering (age groups, tenure ratios, satisfaction indices)
+- Exploratory Data Analysis (EDA) with visualizations
+- Data splitting for modeling and inference
+
+### Model Development
+- Automated preprocessing using PyCaret
+- Multiple model comparison and selection
+- Hyperparameter tuning and optimization
+- Model performance evaluation and interpretation
+
+### Deployment & Monitoring
+- FastAPI service for predictions
+- Metabase dashboard integration
+- Key metrics monitoring:
+  - Overall attrition rates and trends
+  - Department and role-wise attrition
+  - Work environment metrics
+  - Career development indicators
+  - Compensation and benefits analysis
+  - Predictive insights and early warnings
+
 ## 📁 Project Structure
 
 ```
@@ -51,8 +82,6 @@ JJM-attrition-rate/
 - **Output files** (csv, db, etc.) are in `results/`.
 - **`archives/`** contains legacy or old scripts for reference only.
 
----
-
 ## 📊 Project Summary
 
 ### Data Source
@@ -89,18 +118,9 @@ JJM-attrition-rate/
 - The analysis helps identify actionable insights for HR interventions
 - [Full details in docs/attrition_experimentation.md](docs/attrition_experimentation.md)
 
-### Future Works
-- For a robust, production-ready deployment, the following are recommended:
-  - Input validation (check for missing columns, correct dtypes, etc.)
-  - Error handling (bad input, model load errors, etc.)
-  - Logging and monitoring
-  - Security (authentication, rate limiting, etc.)
-  - API endpoint documentation
-- [See todo.md for detailed planned improvements](todo.md)
+## 🚀 Implementation
 
----
-
-## 🚀 API Deployment & Usage
+### API Deployment & Usage
 
 ### 1. Install Requirements
 Make sure you have all dependencies installed (ideally in a virtual environment):
@@ -175,15 +195,93 @@ A list of employee records (all fields except `Attrition`; `EmployeeId` is optio
 - `Label`: 1 = Attrition predicted, 0 = No attrition
 - `Score`: Probability/confidence of attrition
 
----
+### Business Dashboard
+
+The project includes a Metabase dashboard that focuses on monitoring the most important factors influencing employee attrition, as identified by SHAP analysis.
+
+### Dashboard Implementation
+
+1. **Data Source**
+   - SQLite database (`results/feature_monitor.db`)
+   - Table: `shap_selected_features`
+   - Contains only the most impactful features identified by SHAP analysis
+
+2. **Key Features Monitored**
+   - Top SHAP-identified features from the model
+   - Target variable (Attrition)
+   - Features are automatically selected based on SHAP importance scores
+
+3. **Setup & Access**
+   - Dashboard is accessible at `http://localhost:3000`
+   - Uses Metabase OSS (Open Source)
+   - Data is stored in a local SQLite database
+   - Features are automatically updated when the model is retrained
+
+For detailed setup instructions, see [Metabase Setup Guide](docs/metabase_setup.md).
+
+## 🎯 Conclusion
+
+This project successfully developed a comprehensive solution for predicting and managing employee attrition at Jaya Jaya Maju. The implementation combines machine learning with business intelligence to provide actionable insights for HR decision-making.
+
+### Key Findings
+
+1. **Demographics & Attrition Patterns**
+   - 17% overall attrition rate
+   - Higher attrition in younger age groups (26-35 years)
+   - 29% of employees work overtime, a significant risk factor
+   - Most employees in R&D (66%) and Sales (30%)
+
+2. **Critical Factors (SHAP Analysis)**
+   - **OverTime** (0.75): Most influential factor in attrition
+   - **EnvironmentSatisfaction** (0.56): Second most important driver
+   - **Age** (0.37): Younger employees more likely to leave
+   - **MonthlyIncome** (0.26): Compensation impacts retention
+   - **DailyRate & DistanceFromHome**: Moderate influence
+
+### Recommendations
+
+1. **Immediate Actions**
+   - Implement overtime management policies
+   - Enhance work environment satisfaction programs
+   - Develop targeted retention strategies for younger employees
+   - Review compensation structures
+
+2. **Long-term Strategies**
+   - Regular monitoring of key metrics through the dashboard
+   - Continuous model retraining with new data
+   - Department-specific retention programs
+   - Career development initiatives
+
+3. **Technical Improvements**
+   - Collect more data to improve model precision
+   - Engineer interaction features between key variables
+   - Experiment with alternative models
+   - Implement automated monitoring of model performance
+
+### Project Impact
+- **Data-Driven Insights**: Identified key factors driving attrition through SHAP analysis
+- **Predictive Capability**: Achieved 75% recall in identifying at-risk employees
+- **Monitoring System**: Established automated dashboard for continuous tracking
+- **Actionable Intelligence**: Provided clear recommendations for retention strategies
+
+### Business Value
+- **Cost Reduction**: Early identification of attrition risks can reduce recruitment costs
+- **Improved Retention**: Targeted interventions based on data-driven insights
+- **Resource Optimization**: Better allocation of HR resources to high-risk areas
+- **Strategic Planning**: Enhanced ability to forecast and plan for workforce changes
+
+### Future Outlook
+The project establishes a foundation for ongoing workforce analytics and predictive modeling. With regular updates and refinements, this system will continue to provide valuable insights for employee retention and organizational development.
+
+For detailed analysis and methodology, see:
+- [Data Preparation & EDA](docs/data_preparation_and_eda.md)
+- [Model Experimentation](docs/attrition_experimentation.md)
 
 ## 📄 More Information
 - The API applies all feature engineering and preprocessing steps as in model training.
 - For more details, see the code in `api.py` and the modules in `src/`.
 
----
-
-## Updated Workflow for Attrition Analysis
+## 🔄 Updated Workflow for Attrition Analysis
 
 1. **Run Analysis Scripts**: Use `run_all.py` to execute the data cleaning, feature engineering, modeling, and inference scripts in sequence. This will generate all necessary intermediate and final output files.
 
