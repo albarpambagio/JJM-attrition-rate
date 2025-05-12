@@ -44,7 +44,8 @@ JJM-attrition-rate/
 │   ├── metabase_setup.md
 │   ├── lessons_learned.md
 │   ├── experiment_result.txt
-│   └── dashboard.pdf
+│   ├── albarpambagio-dashboard_page_1.png
+│   └── albarpambagio-dashboard_page_2.png    
 ├── docker/                      # Docker and deployment files
 ├── eda_outputs/                 # EDA result files (plots, tables, etc.)
 ├── logs/                        # Log files
@@ -55,7 +56,7 @@ JJM-attrition-rate/
 │   ├── 03_feature_engineering.py
 │   ├── 04_modeling.py
 │   └── 05_inference.py
-├── results/                     # Output files (csv, db, etc.)
+├── results/                     # Output files (mv, csv, db, etc.)
 ├── src/                         # All Python modules (reusable code)
 │   ├── data_processing.py
 │   ├── feature_engineering.py
