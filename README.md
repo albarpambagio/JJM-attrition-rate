@@ -4,40 +4,56 @@
 
 ```
 JJM-attrition-rate/
+├── api/                         # FastAPI app for predictions (main.py, etc.)
+├── archives/                    # (Older scripts, legacy, or archived analysis)
 ├── data/                        # Raw and processed data files
-├── models/                      # Saved models and model artifacts
+├── docs/                        # Documentation (markdown, pdf, etc.)
+│   └── dashboard.pdf
+├── docker/                      # Docker and deployment files
+│   └── metabase-deployment.yaml
 ├── eda_outputs/                 # EDA result files (plots, tables, etc.)
-├── notebook/                    # All notebook-style scripts (for Jupytext or .ipynb)
+│   └── Figure_1.png
+├── logs/                        # Log files
+│   └── logs.log
+├── models/                      # Saved models and model artifacts
+├── notebooks/                   # All notebook-style scripts (for Jupytext or .ipynb)
 │   ├── 01_data_cleaning.py
 │   ├── 02_eda.py
 │   ├── 03_feature_engineering.py
 │   ├── 04_modeling.py
 │   └── 05_inference.py
+├── results/                     # Output files (csv, db, etc.)
+│   └── metabase.db.mv.db
 ├── src/                         # All Python modules (reusable code)
 │   ├── data_processing.py
 │   ├── feature_engineering.py
 │   ├── eda_tools.py
 │   ├── modeling.py
-│   └── inference.py
-├── api.py                       # FastAPI app for predictions
-├── attrition_analysis.py        # (ARCHIVED: legacy monolithic script) # TODO: update project structure
+│   ├── inference.py
+│   └── metabase_prep.py
+├── run_all.py                   # Orchestration script
 ├── README.md
 ├── pyproject.toml
 ├── .gitignore
 ├── todo.md
-└── logs.log
+└── .python-version
 ```
 
 - **All reusable code** (functions, classes) lives in `src/`.
-- **All notebook-style scripts** (for step-by-step analysis, EDA, modeling, etc.) live in `notebook/`.
+- **All notebook-style scripts** (for step-by-step analysis, EDA, modeling, etc.) live in `notebooks/`.
 - **Data** and **models** are in their respective folders.
-- **`attrition_analysis.py`** is archived for reference only.
+- **Documentation** (markdown, pdf, etc.) is in `docs/`.
+- **Deployment files** (Docker, Kubernetes, etc.) are in `docker/`.
+- **EDA outputs** (figures, charts) are in `eda_outputs/`.
+- **Log files** are in `logs/`.
+- **Output files** (csv, db, etc.) are in `results/`.
+- **`archives/`** contains legacy or old scripts for reference only.
 
 ---
 
 ## 🛠️ How to Import Modules in Notebooks/Scripts
 
-At the top of each notebook in `notebook/`, add:
+At the top of each notebook in `notebooks/`, add:
 ```python
 import sys
 from pathlib import Path
@@ -173,3 +189,13 @@ A list of employee records (all fields except `Attrition`; `EmployeeId` is optio
 - For more details, see the code in `api.py` and the modules in `src/`.
 
 ---
+
+## Updated Workflow for Attrition Analysis
+
+1. **Run Analysis Scripts**: Use `run_all.py` to execute the data cleaning, feature engineering, modeling, and inference scripts in sequence. This will generate all necessary intermediate and final output files.
+
+2. **SHAP Feature Importance**: After modeling, SHAP values are calculated to determine the most important features influencing attrition predictions. The results are saved in `results/shap_feature_importance.csv`.
+
+3. **Prepare Data for Dashboarding**: The `src/metabase_prep.py` script selects the top SHAP features and creates a SQLite database (`results/feature_monitor.db`) containing only these features and the target variable.
+
+4. **Metabase Dashboard**: Connect Metabase to the SQLite database and use the `shap_selected_features` table as the basis for your dashboard visualizations. This ensures the dashboard focuses on the most impactful factors for attrition.

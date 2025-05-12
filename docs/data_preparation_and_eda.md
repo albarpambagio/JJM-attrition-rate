@@ -57,6 +57,14 @@
 - Feature engineering is used to create interpretable and potentially predictive features.
 - EDA highlights relationships between attrition and key variables (e.g., department, satisfaction).
 
+## Data Pipeline Updates
+
+The data pipeline now includes an additional step where SHAP feature importance is calculated after model training. The most important features, as determined by SHAP values, are selected and used to create a new SQLite database (`results/feature_monitor.db`). This database is used as the data source for the Metabase dashboard, ensuring that the visualizations reflect the most relevant factors influencing employee attrition.
+
+Key output files:
+- `results/shap_feature_importance.csv`: Contains SHAP values for all features
+- `results/feature_monitor.db`: SQLite database with selected features for dashboarding
+
 ---
 
 *This document summarizes the data preparation and EDA steps as implemented in the attrition analysis pipeline. Update as new steps or findings are added.* 

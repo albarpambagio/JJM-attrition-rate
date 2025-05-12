@@ -79,6 +79,10 @@
 - Explore additional feature engineering or alternative imbalance techniques if higher recall is needed.
 - Use confusion matrix and business cost analysis to select the final model.
 
+## SHAP Feature Selection
+
+To identify the most influential features for predicting employee attrition, we used SHAP (SHapley Additive exPlanations) values. SHAP provides a unified measure of feature importance by quantifying the contribution of each feature to the model's predictions. After training our model, we calculated SHAP values for all features and selected those with the highest mean absolute SHAP values. These features were then used both in the final model and as the basis for the visualizations in the Metabase dashboard. This approach ensures that the dashboard highlights the factors that truly drive attrition predictions, making the insights more actionable and interpretable.
+
 ---
 
 *This log will be updated as further experiments are conducted.* 

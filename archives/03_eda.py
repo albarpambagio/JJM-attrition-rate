@@ -245,38 +245,56 @@ display(Markdown("""
 - **Marital Status:** The majority are Married (44%), with Single (33%) and Divorced (23%) also represented.
 - **Gender:** There are more males (59%) than females (41%).
 - **Age Groups:** The largest age group is 26-35 (41%), followed by 36-45 (31%).
+- **Related cell:** "### Categorical Summary" and "### Value Counts"
+- **Output files:** `results/categorical_summary.csv`, `results/value_counts.md`
 
 ### 2. Numeric Summary
 - **Age:** Mean: 37 years (range: 18–60).
 - **Monthly Income:** Mean: $6,626 (range: $1,009–$19,999).
 - **Years at Company:** Mean: 7.1 years (range: 0–40).
+- **Related cell:** "### Numeric Summary"
+- **Output file:** `results/numeric_summary.csv`
 
 ### 3. Attrition Patterns
 - **Attrition Rate:** About 17% of employees have left (mean of Attrition column).
 - **OverTime:** 29% of employees work overtime, which may be a risk factor for attrition.
+- **Related cell:** "## Attrition by Department", "## All EDA Charts"
+- **Output/plots:** `eda_outputs/attrition_by_jobrole.png`, `eda_outputs/attrition_by_agegroup.png`, and other plots in `eda_outputs/`
 
 ### 4. Statistical Tests
 - **T-test (MonthlyIncome by Attrition):** Result: `nan` (likely due to missing or constant data in one group; check data integrity).
+  - **Cell:** "### T-test: MonthlyIncome by Attrition"
+  - **Output:** `results/ttest_monthlyincome_by_attrition.md`
 - **Chi-square (Department vs. Attrition):** p-value ≈ 0.099 (not statistically significant at 0.05), suggesting department is not a strong predictor of attrition.
+  - **Cell:** "### Chi-square: Department vs. Attrition"
+  - **Output:** `results/chi2_department_vs_attrition.md`
 - **Correlation (Age and MonthlyIncome):** Correlation: 0.50 (p < 0.001), indicating a moderate positive relationship—older employees tend to earn more.
+  - **Cell:** "### Correlation: Age and MonthlyIncome"
+  - **Output:** `results/correlation_age_monthlyincome.md`
 
 ### 5. Visual Insights (from eda_outputs/)
-- Attrition is higher in certain job roles and age groups (see `attrition_by_jobrole.png`, `attrition_by_agegroup.png`).
+- Attrition is higher in certain job roles and age groups (see `eda_outputs/attrition_by_jobrole.png`, `eda_outputs/attrition_by_agegroup.png`).
 - OverTime and Marital Status show visible differences in attrition rates.
-- Correlation heatmap shows strong relationships between some numeric features (see `correlation_heatmap.png`).
+- Correlation heatmap shows strong relationships between some numeric features (see `eda_outputs/correlation_heatmap.png`).
 - Boxplots and violin plots reveal that employees who left often have lower satisfaction and different income distributions.
+- **Related cells:** "## Visualizations of Key Features" and all subsequent visualization sections
+- **Output/plots:** All relevant files in `eda_outputs/`
 
 ## Recommendations
 
 1. **Focus Retention Efforts on At-Risk Groups:**
    - Target job roles and age groups with higher attrition.
    - Monitor employees working overtime and those with lower satisfaction scores.
+   - **Supported by:** Categorical summary, value counts, attrition plots (see above)
 2. **Further Investigate Data Issues:**
    - The t-test for MonthlyIncome by Attrition returned `nan`. Check for missing or constant values in the relevant groups.
+   - **Supported by:** T-test cell and output
 3. **Monitor and Support Employees:**
    - Implement programs to improve job satisfaction, especially for at-risk roles.
    - Review compensation and promotion policies for fairness and competitiveness.
+   - **Supported by:** Numeric/categorical summaries, boxplots, violin plots
 4. **Continue Data-Driven Monitoring:**
    - Regularly update the analysis as new data comes in.
    - Use the exported results and visualizations for ongoing reporting and management decisions.
+   - **Supported by:** All summary and visualization outputs
 """)) 

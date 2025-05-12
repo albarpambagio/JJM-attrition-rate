@@ -58,6 +58,7 @@ models/checkpoints/
 
 # Logs
 logs/
+logs/logs.log
 *.log
 logs.txt
 
@@ -79,6 +80,10 @@ htmlcov/
 # Bytecode caches in src and notebook
 src/__pycache__/
 notebook/__pycache__/
+notebooks/__pycache__/
+
+# Results and Metabase
+results/metabase.db.mv.db
 
 # Keep these files
 !data/README.md
@@ -88,3 +93,4 @@ notebook/__pycache__/
 
 # New file
 docs/experiment_result.txt
+METABASE_DASHBOARD_SETUP.md
