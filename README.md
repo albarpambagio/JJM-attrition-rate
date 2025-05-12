@@ -53,23 +53,6 @@ JJM-attrition-rate/
 
 ---
 
-## 🛠️ How to Import Modules in Notebooks/Scripts
-
-At the top of each notebook in `notebooks/`, add:
-```python
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
-```
-Then import modules as:
-```python
-from data_processing import load_data, clean_data, split_data
-from feature_engineering import engineer_features
-# ...etc.
-```
-
----
-
 ## 📊 Project Summary
 
 ### Data Source
@@ -113,7 +96,7 @@ from feature_engineering import engineer_features
   - Logging and monitoring
   - Security (authentication, rate limiting, etc.)
   - API endpoint documentation
-- [See docs/lessons_learned.md for more](docs/lessons_learned.md)
+- [See todo.md for detailed planned improvements](todo.md)
 
 ---
 
@@ -132,11 +115,7 @@ uvicorn api:app --reload
 ```
 - The API will be available at: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-### 3. API Documentation
-- **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc:** [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
-
-### 4. Example: Predict Attrition
+### 3. Example: Predict Attrition
 #### Endpoint
 `POST /predict`
 
